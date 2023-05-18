@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define N 100
+
+void sortheap(int* numbers, int root, int bottom){
+    int indexMax; 
+    int flag = 0; 
+    while ((root * 2 <= bottom) && (!flag)){
+        if (root * 2 == bottom) {  
+            indexMax = root * 2;
+        }
+        else if (numbers[root * 2] > numbers[root * 2 + 1]) {
+            indexMax = root * 2;
+        }
+        else {
+            indexMax = root * 2 + 1;
+        }
+        if (numbers[root] < numbers[indexMax]){
+            int temp = numbers[root]; 
+            numbers[root] = numbers[indexMax];
+            numbers[indexMax] = temp;
+            root = indexMax;
+        }
+        else {
+            flag = 1; 
+        }
+    }
+}
+
+void BubbleSort(int* numbers, int array_size) {
+    int tmp;
+    for (int i = 0; i < array_size; i++) {
+        for (int j = 1; j < array_size; j++) {
+            if (numbers[j] < numbers[j+1]) {
+                tmp = numbers[j];
+                numbers[j] = numbers[j + 1];
+                numbers[j + 1] = tmp;
+            }
+        }
+    }
+}
+
+void heapSort(int* numbers, int array_size){
+    for (int i = (array_size / 2); i >= 0; i--) {
+        sortheap(numbers, i, array_size - 1);
+    }
+    for (int i = array_size - 1; i >= 1; i--){
+        int temp = numbers[0];
+        numbers[0] = numbers[i];
+        numbers[i] = temp;
+        sortheap(numbers, 0, i - 1);
+    }
+}
+
+int main(){
+    int mass[N];
+    for (int i = 0; i < N; i++) {
+        mass[i] = rand() % 100;
+    }
+    double times = 0.0;
+    clock_t begin = clock();
+    printf_s("Mass not Sort: ");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", mass[i]);
+    }
+    printf("\n");
+    heapSort(mass, N);
+    //BubbleSort(mass, N);
+    printf_s("Mass Sort: ");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", mass[i]);
+    }
+    clock_t end = clock();
+    times += (double)(end - begin) / CLOCKS_PER_SEC;
+    printf_s("%f", times*10);
+    printf("\n");
+    getchar();
+    return 0;
+}
